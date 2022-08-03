@@ -20,11 +20,15 @@ function App() {
      <Route
       path="/"
       element={
-       user ? <HomePage /> : <Navigate to="/login" replace />
+       user || window.localStorage.getItem("user") ? (
+        <HomePage user={user} />
+       ) : (
+        <Navigate to="/login" replace />
+       )
       }
      />
-     <Route path="/login" element={<LoginPage setUser={setUser}/>} />
-     <Route path="/register" element={<RegisterPage setUser={setUser} />} />
+     <Route path="/login" element={<LoginPage setUser={setUser} />} />
+     <Route path="/register" element={<RegisterPage />} />
     </Routes>
    </HashRouter>
   </Container>

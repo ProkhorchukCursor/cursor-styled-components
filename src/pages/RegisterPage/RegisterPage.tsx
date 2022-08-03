@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Grid, Typography } from "@mui/material";
+import { Alert, Grid, Typography } from "@mui/material";
 
 import {
  StyledAvatar,
@@ -20,18 +21,42 @@ import LockIcon from "@mui/icons-material/LockOutlined";
 import CropSquareOutlinedIcon from "@mui/icons-material/CropSquareOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 
-interface IProps {
- setUser: (user: string) => void;
-}
+import { IUser } from "../../types/IUser";
 
-const RegisterPage = ({ setUser }: IProps) => {
- const [emeil, setEmail] = useState("");
+const RegisterPage = () => {
+ const [email, setEmail] = useState("");
  const [password, setPassword] = useState("");
  const [firstName, setFirstName] = useState("");
  const [lastName, setLastName] = useState("");
+ const [isAlert, setIsAlert] = useState(false);
+ const [dataBase, setDataBase] = useState<IUser[]>([]);
+
+ useEffect(() => {
+  const localUser = window.localStorage.getItem("dataBase");
+  if (localUser) setDataBase(JSON.parse(localUser));
+ }, []);
+
+ const navigate = useNavigate();
 
  const handleSubmit = () => {
-  setUser(JSON.stringify({ emeil, password }));
+  if (email && password && firstName && lastName) {
+   const newUser = { email, password, firstName, lastName };
+
+   if (dataBase.find((el) => el.email === newUser.email)) return handleAlert();
+
+   window.localStorage.setItem(
+    "dataBase",
+    JSON.stringify([...dataBase, newUser]),
+   );
+   navigate("/login");
+  }
+ };
+
+ const handleAlert = () => {
+  setIsAlert(true);
+  setTimeout(() => {
+   setIsAlert(false);
+  }, 5000);
  };
 
  return (
@@ -61,7 +86,7 @@ const RegisterPage = ({ setUser }: IProps) => {
     </Grid>
     <StyledInput
      label="Email Address*"
-     value={emeil}
+     value={email}
      onChange={(e) => setEmail(e.target.value)}
      fullWidth
     />
@@ -80,6 +105,7 @@ const RegisterPage = ({ setUser }: IProps) => {
      }
      label="I want to receive inspiration, marketing promotions and updates via email"
     />
+    {isAlert && <Alert severity="error">User already exists</Alert>}
     <StyledButton variant="contained" onClick={handleSubmit}>
      <Typography>Sign up</Typography>
     </StyledButton>

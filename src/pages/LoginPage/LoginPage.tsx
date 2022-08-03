@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { Typography } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 
 import {
  StyledAvatar,
@@ -20,23 +21,52 @@ import LockIcon from "@mui/icons-material/LockOutlined";
 import CropSquareOutlinedIcon from "@mui/icons-material/CropSquareOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 
+import { IUser } from "../../types/IUser";
+
 interface IProps {
  setUser: (user: string) => void;
 }
 
 const LoginPage = ({ setUser }: IProps) => {
- const [emeil, setEmail] = useState("");
+ const [email, setEmail] = useState("");
  const [password, setPassword] = useState("");
  const [remember, setRemember] = useState(false);
+ const [dataBase, setDataBase] = useState<IUser[]>([]);
+ const [isAlert, setIsAlert] = useState(false);
+
+ const navigate = useNavigate();
+
+ useEffect(() => {
+  const localUser = window.localStorage.getItem("dataBase");
+  if (localUser) setDataBase(JSON.parse(localUser));
+ }, []);
 
  const handleSubmit = () => {
-  if (remember) {
-   window.localStorage.setItem("user", JSON.stringify({ emeil, password }));
-  } else {
-   window.localStorage.setItem("user", "");
-  }
+  if (email && password) {
+   const data = { email, password };
 
-  setUser(JSON.stringify({ emeil, password }));
+   if (
+    !dataBase.find(
+     (el) => el.email === data.email && el.password === data.password,
+    )
+   )
+    return handleAlert();
+
+   if (remember) {
+    window.localStorage.setItem("user", JSON.stringify(data));
+   } else {
+    window.localStorage.setItem("user", "");
+   }
+   navigate("/");
+   setUser(JSON.stringify(data));
+  }
+ };
+
+ const handleAlert = () => {
+  setIsAlert(true);
+  setTimeout(() => {
+   setIsAlert(false);
+  }, 5000);
  };
 
  return (
@@ -48,7 +78,7 @@ const LoginPage = ({ setUser }: IProps) => {
    <StyledStack spacing={2}>
     <StyledInput
      label="Email Address*"
-     value={emeil}
+     value={email}
      onChange={(e) => setEmail(e.target.value)}
      fullWidth
     />
@@ -69,6 +99,7 @@ const LoginPage = ({ setUser }: IProps) => {
      value={remember}
      onClick={() => setRemember(!remember)}
     />
+    {isAlert && <Alert severity="error">Email or password is incorrect</Alert>}
     <StyledButton variant="contained" onClick={handleSubmit}>
      <Typography>Sign in</Typography>
     </StyledButton>
