@@ -4,23 +4,23 @@ import { TextField } from "@mui/material";
 
 const StyledInput = styled(TextField)({
  "& label.Mui-focused": {
-  color: "grey",
+  color: "green",
  },
  "& label": {
-  color: "grey",
+  color: "green",
  },
  "& .MuiOutlinedInput-root": {
   "& fieldset": {
-   borderColor: "grey",
+   borderColor: "green",
   },
   "&:hover fieldset": {
-   borderColor: "grey",
+   borderColor: "green",
   },
   "&.Mui-focused fieldset": {
-   borderColor: "grey",
+   borderColor: "green",
   },
   "& input": {
-   color: "grey",
+   color: "green",
   },
  },
 });

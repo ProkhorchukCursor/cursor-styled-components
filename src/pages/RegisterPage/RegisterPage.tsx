@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { Alert, Grid, Typography } from "@mui/material";
 
+import { Validate, ValidationGroup } from "mui-validate";
+
 import {
  StyledAvatar,
  StyledBoxEndLinks,
@@ -14,12 +16,15 @@ import {
  StyledInput,
  StyledLink,
  StyledStack,
+ StyledSuccesInput,
  StyledTitle,
 } from "../../components";
 
 import LockIcon from "@mui/icons-material/LockOutlined";
 import CropSquareOutlinedIcon from "@mui/icons-material/CropSquareOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+
+import { validEmail, validPassword, validName } from "../../common/validation";
 
 import { IUser } from "../../types/IUser";
 
@@ -28,8 +33,13 @@ const RegisterPage = () => {
  const [password, setPassword] = useState("");
  const [firstName, setFirstName] = useState("");
  const [lastName, setLastName] = useState("");
+ const [alertMessage, setAlertMessage] = useState("");
  const [isAlert, setIsAlert] = useState(false);
  const [dataBase, setDataBase] = useState<IUser[]>([]);
+ const [isEmailValid, setIsEmailValid] = useState(false);
+ const [isPasswordValid, setIsPasswordValid] = useState(false);
+ const [isFirstNameValid, setIsFirstNameValid] = useState(false);
+ const [isLastNameValid, setIsLastNameValid] = useState(false);
 
  useEffect(() => {
   const localUser = window.localStorage.getItem("dataBase");
@@ -39,22 +49,27 @@ const RegisterPage = () => {
  const navigate = useNavigate();
 
  const handleSubmit = () => {
-  if (email && password && firstName && lastName) {
+  if (isEmailValid && isPasswordValid && isFirstNameValid && isLastNameValid) {
    const newUser = { email, password, firstName, lastName };
 
-   if (dataBase.find((el) => el.email === newUser.email)) return handleAlert();
+   if (dataBase.find((el) => el.email === newUser.email))
+    return handleAlert("User already exists");
 
    window.localStorage.setItem(
     "dataBase",
     JSON.stringify([...dataBase, newUser]),
    );
    navigate("/login");
+  } else {
+   return handleAlert("Fields are not filled");
   }
  };
 
- const handleAlert = () => {
+ const handleAlert = (message: string) => {
   setIsAlert(true);
+  setAlertMessage(message);
   setTimeout(() => {
+   setAlertMessage("");
    setIsAlert(false);
   }, 5000);
  };
@@ -65,54 +80,140 @@ const RegisterPage = () => {
     <LockIcon />
    </StyledAvatar>
    <StyledTitle variant="h5">Sign up</StyledTitle>
-   <StyledStack spacing={2}>
-    <Grid container spacing={2}>
-     <Grid item xs={6}>
-      <StyledInput
-       label="First Name*"
-       value={firstName}
-       onChange={(e) => setFirstName(e.target.value)}
-       fullWidth
-      />
+   <ValidationGroup>
+    <StyledStack spacing={2}>
+     <Grid container spacing={2}>
+      <Grid item xs={6}>
+       <Validate
+        regex={[validName, "Must be at least 3 characters."]}
+        name={"First Name*"}
+        after={(res) => {
+         setIsFirstNameValid(res.valid);
+        }}
+       >
+        {isLastNameValid ? (
+         <StyledSuccesInput
+          label="First Name*"
+          value={firstName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+           setFirstName(e.target.value)
+          }
+          fullWidth
+         />
+        ) : (
+         <StyledInput
+          label="First Name*"
+          value={firstName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+           setFirstName(e.target.value)
+          }
+          fullWidth
+         />
+        )}
+       </Validate>
+      </Grid>
+      <Grid item xs={6}>
+       <Validate
+        regex={[validName, "Must be at least 3 characters."]}
+        name={"Last Name*"}
+        after={(res) => {
+         setIsLastNameValid(res.valid);
+        }}
+       >
+        {isFirstNameValid ? (
+         <StyledSuccesInput
+          label="Last Name*"
+          value={lastName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+           setLastName(e.target.value)
+          }
+          fullWidth
+         />
+        ) : (
+         <StyledInput
+          label="Last Name*"
+          value={lastName}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+           setLastName(e.target.value)
+          }
+          fullWidth
+         />
+        )}
+       </Validate>
+      </Grid>
      </Grid>
-     <Grid item xs={6}>
-      <StyledInput
-       label="Last Name*"
-       value={lastName}
-       onChange={(e) => setLastName(e.target.value)}
-       fullWidth
-      />
-     </Grid>
-    </Grid>
-    <StyledInput
-     label="Email Address*"
-     value={email}
-     onChange={(e) => setEmail(e.target.value)}
-     fullWidth
-    />
-    <StyledInput
-     label="Password*"
-     value={password}
-     onChange={(e) => setPassword(e.target.value)}
-     fullWidth
-    />
-    <StyledFormControlLabel
-     control={
-      <StyledCheckbox
-       icon={<CropSquareOutlinedIcon />}
-       checkedIcon={<CheckBoxOutlinedIcon />}
-      />
-     }
-     label="I want to receive inspiration, marketing promotions and updates via email"
-    />
-    {isAlert && <Alert severity="error">User already exists</Alert>}
-    <StyledButton variant="contained" onClick={handleSubmit}>
-     <Typography>Sign up</Typography>
-    </StyledButton>
-    <StyledBoxEndLinks>
-     <StyledLink to={"/login"}>Already have an account? Sign in</StyledLink>
-    </StyledBoxEndLinks>
-   </StyledStack>
+     <Validate
+      regex={[validEmail, "Email isn't valid"]}
+      name={"Email Address*"}
+      after={(res) => {
+       setIsEmailValid(res.valid);
+      }}
+     >
+      {isEmailValid ? (
+       <StyledSuccesInput
+        label="Email Address*"
+        value={email}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+         setEmail(e.target.value)
+        }
+        fullWidth
+       />
+      ) : (
+       <StyledInput
+        label="Email Address*"
+        value={email}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+         setEmail(e.target.value)
+        }
+        fullWidth
+       />
+      )}
+     </Validate>
+     <Validate
+      regex={[validPassword, "Password isn't valid"]}
+      name={"Password*"}
+      after={(res) => {
+       setIsPasswordValid(res.valid);
+      }}
+     >
+      {isPasswordValid ? (
+       <StyledSuccesInput
+        label="Password*"
+        value={password}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+         setPassword(e.target.value)
+        }
+        fullWidth
+       />
+      ) : (
+       <StyledInput
+        label="Password*"
+        value={password}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+         setPassword(e.target.value)
+        }
+        fullWidth
+       />
+      )}
+     </Validate>
+     <StyledFormControlLabel
+      control={
+       <StyledCheckbox
+        icon={<CropSquareOutlinedIcon />}
+        checkedIcon={<CheckBoxOutlinedIcon />}
+       />
+      }
+      label="I want to receive inspiration, marketing promotions and updates via email"
+     />
+     {isAlert && <Alert severity="error">{alertMessage}</Alert>}
+     <StyledButton variant="contained" onClick={handleSubmit}>
+      <Typography>Sign up</Typography>
+     </StyledButton>
+     <StyledBoxEndLinks>
+      <StyledLink to={"/login"}>Already have an account? Sign in</StyledLink>
+     </StyledBoxEndLinks>
+    </StyledStack>
+   </ValidationGroup>
    <StyledCopyright>Copyright &copy; Your Website, 2022</StyledCopyright>
   </StyledContainer>
  );
