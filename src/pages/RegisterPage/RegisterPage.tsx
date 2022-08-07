@@ -91,7 +91,7 @@ const RegisterPage = () => {
          setIsFirstNameValid(res.valid);
         }}
        >
-        {isLastNameValid ? (
+        {isFirstNameValid ? (
          <StyledSuccesInput
           label="First Name*"
           value={firstName}
@@ -99,6 +99,7 @@ const RegisterPage = () => {
            setFirstName(e.target.value)
           }
           fullWidth
+          autoFocus
          />
         ) : (
          <StyledInput
@@ -120,7 +121,7 @@ const RegisterPage = () => {
          setIsLastNameValid(res.valid);
         }}
        >
-        {isFirstNameValid ? (
+        {isLastNameValid ? (
          <StyledSuccesInput
           label="Last Name*"
           value={lastName}
@@ -128,6 +129,7 @@ const RegisterPage = () => {
            setLastName(e.target.value)
           }
           fullWidth
+          autoFocus
          />
         ) : (
          <StyledInput
@@ -157,6 +159,7 @@ const RegisterPage = () => {
          setEmail(e.target.value)
         }
         fullWidth
+        autoFocus
        />
       ) : (
        <StyledInput
@@ -184,6 +187,7 @@ const RegisterPage = () => {
          setPassword(e.target.value)
         }
         fullWidth
+        autoFocus
        />
       ) : (
        <StyledInput

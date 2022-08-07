@@ -104,6 +104,7 @@ const LoginPage = ({ setUser }: IProps) => {
          setEmail(e.target.value)
         }
         fullWidth
+        autoFocus
        />
       ) : (
        <StyledInput
@@ -131,6 +132,7 @@ const LoginPage = ({ setUser }: IProps) => {
          setPassword(e.target.value)
         }
         fullWidth
+        autoFocus
        />
       ) : (
        <StyledInput
