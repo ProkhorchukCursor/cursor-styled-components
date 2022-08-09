@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Alert, Grid, Typography } from "@mui/material";
-
+import { Alert, Grid, Typography } from "@mui/material"
 import { Validate, ValidationGroup } from "mui-validate";
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+import CropSquareOutlinedIcon from "@mui/icons-material/CropSquareOutlined";
+import LockIcon from "@mui/icons-material/LockOutlined";
 
 import {
  StyledAvatar,
@@ -20,9 +22,6 @@ import {
  StyledTitle,
 } from "../../components";
 
-import LockIcon from "@mui/icons-material/LockOutlined";
-import CropSquareOutlinedIcon from "@mui/icons-material/CropSquareOutlined";
-import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 
 import { validEmail, validPassword, validName } from "../../common/validation";
 

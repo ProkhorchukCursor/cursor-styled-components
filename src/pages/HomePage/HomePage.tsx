@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Typography } from "@mui/material";
+import LockIcon from "@mui/icons-material/LockOutlined";
 
 import {
  StyledAvatar,
@@ -9,8 +10,6 @@ import {
  StyledStack,
  StyledTitle,
 } from "../../components";
-
-import LockIcon from "@mui/icons-material/LockOutlined";
 
 interface IProps {
  user: string;
