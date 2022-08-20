@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Alert, Grid, Typography } from "@mui/material"
+import { Alert, Grid, Typography } from "@mui/material";
 import { Validate, ValidationGroup } from "mui-validate";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import CropSquareOutlinedIcon from "@mui/icons-material/CropSquareOutlined";
@@ -21,7 +21,6 @@ import {
  StyledSuccesInput,
  StyledTitle,
 } from "../../components";
-
 
 import { validEmail, validPassword, validName } from "../../common/validation";
 
@@ -108,6 +107,7 @@ const RegisterPage = () => {
            setFirstName(e.target.value)
           }
           fullWidth
+          autoFocus
          />
         )}
        </Validate>
@@ -138,6 +138,7 @@ const RegisterPage = () => {
            setLastName(e.target.value)
           }
           fullWidth
+          autoFocus
          />
         )}
        </Validate>
@@ -159,6 +160,7 @@ const RegisterPage = () => {
         }
         fullWidth
         autoFocus
+        type="email"
        />
       ) : (
        <StyledInput
@@ -168,6 +170,8 @@ const RegisterPage = () => {
          setEmail(e.target.value)
         }
         fullWidth
+        autoFocus
+        type="email"
        />
       )}
      </Validate>
@@ -187,6 +191,7 @@ const RegisterPage = () => {
         }
         fullWidth
         autoFocus
+        type="password"
        />
       ) : (
        <StyledInput
@@ -196,6 +201,8 @@ const RegisterPage = () => {
          setPassword(e.target.value)
         }
         fullWidth
+        autoFocus
+        type="password"
        />
       )}
      </Validate>

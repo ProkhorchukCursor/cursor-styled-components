@@ -59,11 +59,7 @@ const LoginPage = ({ setUser }: IProps) => {
    )
     return handleAlert("Email or password is incorrect");
 
-   if (remember) {
-    window.localStorage.setItem("user", JSON.stringify(data));
-   } else {
-    window.localStorage.setItem("user", "");
-   }
+   window.localStorage.setItem("user", remember ? JSON.stringify(data) : "");
    navigate("/");
    setUser(JSON.stringify(data));
   } else {
@@ -104,6 +100,7 @@ const LoginPage = ({ setUser }: IProps) => {
         }
         fullWidth
         autoFocus
+        type="email"
        />
       ) : (
        <StyledInput
@@ -113,6 +110,8 @@ const LoginPage = ({ setUser }: IProps) => {
          setEmail(e.target.value)
         }
         fullWidth
+        autoFocus
+        type="email"
        />
       )}
      </Validate>
@@ -132,6 +131,7 @@ const LoginPage = ({ setUser }: IProps) => {
         }
         fullWidth
         autoFocus
+        type="password"
        />
       ) : (
        <StyledInput
@@ -141,6 +141,8 @@ const LoginPage = ({ setUser }: IProps) => {
          setPassword(e.target.value)
         }
         fullWidth
+        autoFocus
+        type="password"
        />
       )}
      </Validate>
